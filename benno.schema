@@ -1,0 +1,26 @@
+## Attribute (1.3.6.1.4.1.30259.1.2.1)
+
+# global attributes
+attributetype ( 1.3.6.1.4.1.30259.1.2.1.1 NAME 'bennoContainer'
+    DESC 'Benno Container the user has access to'
+    EQUALITY caseExactMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+# user attributes
+attributetype ( 1.3.6.1.4.1.30259.1.2.1.2 NAME 'bennoEmailAddress'
+    DESC 'Additional E-Mail addresses that could be searched by user'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 1.3.6.1.4.1.30259.1.2.1.3 NAME 'bennoRole'
+    DESC 'Role of the user: [USER|ADMIN|REVISOR]'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} SINGLE-VALUE)
+
+## Objektklassen (1.3.6.1.4.1.30259.1.2.2)
+
+objectclass ( 1.3.6.1.4.1.30259.1.1.2.2 NAME 'BennoMailarchivUser'
+    DESC 'Per user configuration data of Benno Mailarchiv' SUP top AUXILIARY
+    MAY  ( bennoContainer $ bennoEmailAddress $ bennoRole ) )
+
+
