@@ -4,21 +4,21 @@ export UNIVENTION_APP_IDENTIFIER="Benno MailArchiv"
 . /usr/share/univention-lib/ldap.sh
 
 # register LDAP schema
-ucs_registerLDAPExtension --schema /tmp/bennomailarchiv.schema --packagename BennoMailArchiv --packageversion 1
+ucs_registerLDAPExtension "$@" --schema /tmp/bennomailarchiv.schema --packagename BennoMailArchiv --packageversion 1
 
 # register "bennoRole" syntax
-ucs_registerLDAPExtension  --udm_syntax benno_syntax.py --packagename BennoMailArchiv --packageversion 1
+ucs_registerLDAPExtension "$@" --udm_syntax benno_syntax.py --packagename BennoMailArchiv --packageversion 1
 
 eval "$(univention-config-registry shell)"
 
 # create container for custom attributes
-udm container/cn create "$@" \
+univention-directory-manager container/cn create "$@" \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
 	--set name="benno" \
 	--set description="benno Mail Archive"
 
 # create custom attributes
-univention-directory-manager settings/extended_attribute create \
+univention-directory-manager settings/extended_attribute create "$@" \
 	--position="cn=benno,cn=custom attributes,cn=univention,$ldap_base" \
 	--set name="bennoContainer" \
 	--set CLIName="bennoContainer" \
@@ -33,7 +33,7 @@ univention-directory-manager settings/extended_attribute create \
 	--set multivalue=1 \
 	--set syntax=string
 
-univention-directory-manager settings/extended_attribute create \
+univention-directory-manager settings/extended_attribute create "$@" \
 	--position="cn=benno,cn=custom attributes,cn=univention,$ldap_base" \
 	--set name="bennoEmailAddress" \
 	--set CLIName="bennoEmailAddress" \
@@ -49,7 +49,7 @@ univention-directory-manager settings/extended_attribute create \
 	--set syntax=string
 
 
-univention-directory-manager settings/extended_attribute create \
+univention-directory-manager settings/extended_attribute create "$@" \
 	--position="cn=benno,cn=custom attributes,cn=univention,$ldap_base" \
 	--set name="bennoRole" \
 	--set CLIName="bennoRole" \
