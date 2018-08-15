@@ -1,13 +1,57 @@
 #!/bin/bash
 
+cat > /tmp/bennomailarchiv.schema <<EOF
+## Attribute (1.3.6.1.4.1.30259.1.2.1)
+
+# global attributes
+attributetype ( 1.3.6.1.4.1.30259.1.2.1.1 NAME 'bennoContainer'
+    DESC 'Benno Container the user has access to'
+    EQUALITY caseExactMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+
+# user attributes
+attributetype ( 1.3.6.1.4.1.30259.1.2.1.2 NAME 'bennoEmailAddress'
+    DESC 'Additional E-Mail addresses that could be searched by user'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 1.3.6.1.4.1.30259.1.2.1.3 NAME 'bennoRole'
+    DESC 'Role of the user: [USER|ADMIN|REVISOR]'
+    EQUALITY caseIgnoreIA5Match
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} SINGLE-VALUE)
+
+## Objektklassen (1.3.6.1.4.1.30259.1.2.2)
+
+objectclass ( 1.3.6.1.4.1.30259.1.1.2.2 NAME 'BennoMailarchivUser'
+    DESC 'Per user configuration data of Benno Mailarchiv' SUP top AUXILIARY
+    MAY  ( bennoContainer $ bennoEmailAddress $ bennoRole ) )
+EOF
+
+cat > /tmp/benno_syntax.py <<EOF
+from univention.admin.syntax import select
+
+
+class bennoRole(select):
+
+	choices = [
+		('USER', 'Benutzer'),
+		('ADMIN', 'Administrator'),
+		('REVISOR', 'Revisor'),
+	]
+EOF
+
 export UNIVENTION_APP_IDENTIFIER="Benno MailArchiv"
 . /usr/share/univention-lib/ldap.sh
 
 # register LDAP schema
+
 ucs_registerLDAPExtension "$@" --schema /tmp/bennomailarchiv.schema --packagename BennoMailArchiv --packageversion 1
 
 # register "bennoRole" syntax
-ucs_registerLDAPExtension "$@" --udm_syntax benno_syntax.py --packagename BennoMailArchiv --packageversion 1
+ucs_registerLDAPExtension "$@" --udm_syntax /tmp/benno_syntax.py --packagename BennoMailArchiv --packageversion 1
+
+rm -f /tmp/bennomailarchiv.schema
+rm -f /tmp/benno_syntax.py
 
 eval "$(univention-config-registry shell)"
 
