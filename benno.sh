@@ -69,6 +69,7 @@ univention-directory-manager settings/extended_attribute create "$@" \
 	--set shortDescription="benno Container auf den der Benuzter Zugriff hat" \
 	--set module=users/user \
 	--set module=groups/group \
+	--set module=kopano/non-active \
 	--set objectClass="BennoMailarchivUser" \
 	--set ldapMapping="bennoContainer" \
 	--set tabName="Benno Mailarchiv" \
@@ -84,6 +85,7 @@ univention-directory-manager settings/extended_attribute create "$@" \
 	--set shortDescription="benno Adressliste für Zugriffssteuerung" \
 	--set module=users/user \
 	--set module=groups/group \
+	--set module=kopano/non-active \
 	--set objectClass="BennoMailarchivUser" \
 	--set ldapMapping="bennoEmailAddress" \
 	--set tabName="Benno Mailarchiv" \
@@ -100,6 +102,7 @@ univention-directory-manager settings/extended_attribute create "$@" \
 	--set shortDescription="benno Rolle" \
 	--set module=users/user \
 	--set module=groups/group \
+	--set module=kopano/non-active \
 	--set objectClass="BennoMailarchivUser" \
 	--set ldapMapping="bennoRole" \
 	--set tabName="Benno Mailarchiv" \
